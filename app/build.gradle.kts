@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
 }
 
+
 android {
     namespace = "com.example.recordapplication"
     compileSdk = 34
@@ -25,6 +26,8 @@ android {
             )
         }
     }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,22 +43,24 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("mysql:mysql-connector-java:5.1.49")
-    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.1.17")
-    implementation ("com.karumi:dexter:6.2.3")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.1.17")
+    implementation("com.karumi:dexter:6.2.3")
+    implementation("com.arthenica:mobile-ffmpeg-full:4.4")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
+
+
+
+
+    implementation("org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0")
+
+    implementation ("com.mpatric:mp3agic:0.9.1")
 
     implementation ("com.arthenica:mobile-ffmpeg-full:4.4")
-
-    implementation ("com.google.android.gms:play-services-location:18.0.0")
-
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
-
-    implementation("com.google.android.gms:play-services-location-license:12.0.1")
 
 
 
 
 }
+

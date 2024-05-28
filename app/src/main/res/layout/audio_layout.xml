@@ -14,6 +14,7 @@
         app:cardCornerRadius="8dp">
 
         <LinearLayout
+            android:background="@color/bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -21,9 +22,12 @@
 
             <TextView
                 android:id="@+id/nameTextView"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:text="recording 1.mp3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black" />
+                android:textColor="@color/white" />
 
 <!--            <SeekBar-->
 <!--                android:id="@+id/seekBar"-->
@@ -60,34 +64,46 @@
 <!--                    android:padding="5dp"-->
 <!--                    android:layout_gravity="end"/>-->
 <!--            </LinearLayout>-->
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:visibility="gone" />
+<!--            <SeekBar-->
+<!--                android:id="@+id/seekBar"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                 />-->
 
-            <LinearLayout
-                android:id="@+id/controlsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp"
-                android:visibility="gone">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/controlsLayout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                >-->
 
-                <ImageView
-                    android:id="@+id/imageViewPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_play_arrow_24"
-                    android:padding="5dp" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewPlay"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/baseline_play_arrow_24"-->
+<!--                    android:padding="5dp" />-->
 
-                <ImageView
-                    android:id="@+id/imageViewStop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_stop_24"
-                    android:padding="5dp" />
+<!--&lt;!&ndash;                <Button&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:id="@+id/btnPlay"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="wrap_content"></Button>&ndash;&gt;-->
+<!--&lt;!&ndash;                <Button&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:id="@+id/btnPlayStop"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:text="Play" />&ndash;&gt;-->
+
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewStop"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/baseline_stop_24"-->
+<!--                    android:padding="5dp" />-->
+
 
                 <ImageView
                     android:id="@+id/imageViewDownload"
@@ -96,7 +112,7 @@
                     android:src="@drawable/baseline_file_download_24"
                     android:padding="5dp"
                     android:layout_gravity="end" />
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
         </LinearLayout>
 

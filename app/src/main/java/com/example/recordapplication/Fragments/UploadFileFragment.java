@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -48,10 +49,8 @@ public class UploadFileFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<AudioFile> audioFiles = new ArrayList<>();
     private AudioFilesAdapter adapter;
-    private MediaPlayer mediaPlayer;
     private Handler seekBarHandler = new Handler();
     private Runnable updateSeekBar;
-    private AudioFile currentAudioFile;
 
     @Nullable
     @Override
@@ -63,7 +62,7 @@ public class UploadFileFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new AudioFilesAdapter(audioFiles, this::playAudioFile, this::downloadAudioFile, this::onPlayClick, this::onStopClick);
+        adapter = new AudioFilesAdapter(audioFiles, this::openAudioFileWithExternalApp, this::downloadAudioFile);
         recyclerView.setAdapter(adapter);
 
         view.findViewById(R.id.btnSelectAudio).setOnClickListener(this::selectAudioFile);
@@ -86,7 +85,6 @@ public class UploadFileFragment extends Fragment {
                     }
                 }
             });
-
     public void selectAudioFile(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
@@ -128,6 +126,7 @@ public class UploadFileFragment extends Fragment {
         });
     }
 
+
     private void fetchAudioFiles() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
@@ -152,11 +151,38 @@ public class UploadFileFragment extends Fragment {
         });
     }
 
-    private void playAudioFile(AudioFile audioFile) {
-        // Placeholder method for actual audio file playback
-        // Add your playback logic here
+
+
+    private void openAudioFileWithExternalApp(AudioFile audioFile) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            String query = "SELECT audio FROM audio_files WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, audioFile.getId());
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    byte[] audioBytes = rs.getBytes("audio");
+                    File audioFileTemp = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_MUSIC), "temp_audio.mp3");
+                    try (FileOutputStream fos = new FileOutputStream(audioFileTemp)) {
+                        fos.write(audioBytes);
+                    }
+
+                    getActivity().runOnUiThread(() -> OnSelectListed(audioFileTemp));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Failed to open audio file", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
+    public void OnSelectListed(File file) {
+        Uri uri = FileProvider.getUriForFile(getContext(), getContext().getApplicationContext().getPackageName() + ".provider", file);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "audio/x-wav");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
+    }
     private void downloadAudioFile(AudioFile audioFile) {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
@@ -171,12 +197,12 @@ public class UploadFileFragment extends Fragment {
                     byte[] audioBytes = rs.getBytes("audio");
                     String fileName = rs.getString("name");
 
-                    File downloadDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "AudioFiles");
-                    if (!downloadDir.exists()) {
-                        downloadDir.mkdirs();
+                    File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    if (!downloadsDir.exists()) {
+                        downloadsDir.mkdirs();
                     }
 
-                    File outputFile = new File(downloadDir, fileName);
+                    File outputFile = new File(downloadsDir, fileName);
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         fos.write(audioBytes);
                     }
@@ -190,73 +216,8 @@ public class UploadFileFragment extends Fragment {
         });
     }
 
-    private void onPlayClick(AudioFile audioFile, SeekBar seekBar) {
-        if (currentAudioFile != null && currentAudioFile.equals(audioFile)) {
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                return;
-            }
-        } else {
-            if (mediaPlayer != null) {
-                mediaPlayer.release();
-            }
-            mediaPlayer = new MediaPlayer();
-            try {
-                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File audioFilePath = new File(downloadsDir, audioFile.getName());
-                mediaPlayer.setDataSource(audioFilePath.getAbsolutePath());
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-                seekBar.setMax(mediaPlayer.getDuration());
 
-                currentAudioFile = audioFile;
 
-                updateSeekBar = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mediaPlayer != null) {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                            seekBarHandler.postDelayed(this, 1000);
-                        }
-                    }
-                };
-                seekBarHandler.postDelayed(updateSeekBar, 0);
-
-                mediaPlayer.setOnCompletionListener(mp -> seekBarHandler.removeCallbacks(updateSeekBar));
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Failed to play audio file", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && mediaPlayer != null) {
-                    mediaPlayer.seekTo(progress);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-    }
-
-    private void onStopClick() {
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying() || mediaPlayer.isLooping()) {
-                mediaPlayer.stop();
-            }
-            mediaPlayer.release();
-            mediaPlayer = null;
-            seekBarHandler.removeCallbacks(updateSeekBar);
-            currentAudioFile = null;
-        }
-    }
 
     private String getFileName(Uri uri) {
         String result = null;
@@ -277,6 +238,7 @@ public class UploadFileFragment extends Fragment {
         return result;
     }
 
+
     public void connect() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
@@ -295,4 +257,9 @@ public class UploadFileFragment extends Fragment {
             }
         });
     }
+
+
+
+
+
 }

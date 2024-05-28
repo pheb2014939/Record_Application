@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue3"
+
+    tools:context=".AudioCutterActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="11dp"
+        android:background="@drawable/green_border"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:id="@+id/rangeSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:layout_marginTop="324dp"
+            android:layout_marginBottom="503dp"
+            android:gravity="center"
+            app:activeColor="#ED1C24"
+            app:alwaysActive="true"
+            app:layout_constraintBottom_toTopOf="@+id/btnCutAudio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showLabels="true"
+            app:textAboveThumbsColor="#000000"
+            app:thumbDisabled="@drawable/seekbar"
+            app:thumbNormal="@drawable/seekbar"
+            app:thumbPressed="@drawable/seekbar" />
+
+        <TextView
+            android:id="@+id/tvEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rangeSeekBar"
+            android:layout_alignStart="@+id/rangeSeekBar"
+            android:layout_alignLeft="@+id/rangeSeekBar"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="52dp"
+            android:textColor="#000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeSeekBar" />
+
+        <TextView
+            android:id="@+id/tvStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rangeSeekBar"
+            android:layout_alignEnd="@+id/rangeSeekBar"
+            android:layout_alignRight="@+id/rangeSeekBar"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="16dp"
+            android:textColor="#000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeSeekBar" />
+
+
+        <Button
+            android:id="@+id/btnCutAudio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="108dp"
+            android:background="@drawable/btn_border"
+            android:gravity="center"
+            android:padding="2dp"
+            android:singleLine="true"
+            android:text="Cut audio"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:backgroundTint="@color/blue4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

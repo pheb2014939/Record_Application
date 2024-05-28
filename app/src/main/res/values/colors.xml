@@ -3,10 +3,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>8FDFFD
     <color name="blue">#8FDFFD</color>0092F2
-    <color name="blue1">#0092F2</color>ACADAD
+    <color name="blue1">#1CB0F6</color>1CB0F6
+    <color name="blue2">#1CB0F6</color>
     <color name="gray">#ACADAD</color>FFF3F4
     <color name="bgColor">#FFF3F4</color>
-    <color name="pink">#FD2D55</color>FD2D55
+    <color name="pink">#FD2D55</color>202F36
+    <color name="bg">#202F36</color>
+    <color name="text">#52656D</color>
+    <color name="blue3">#B2F1FE</color>02559C
+    <color name="blue4">#17B9E5</color>
+
 
 
 
